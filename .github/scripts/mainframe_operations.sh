@@ -32,6 +32,17 @@ cd ..
 run_cobolcheck() {
   program=$1
   echo "Running cobolcheck for $program"
+  
+  # Copy the CBL file if it exists
+  if [ -f "./scr/main/cobol${program}.CBL" ]; then
+    if cp "./src/main/cobol/${program}.CBL" "//'${ZOWE_USERNAME}.CBL($program)'"; then
+      echo "Copied ${program}.CBL to ${ZOWE_USERNAME}.CBL($program)"
+    else
+      echo "Failed to copy ${program}.JCL to ${ZOWE_USERNAME}.JCL($program)"
+    fi
+  else
+    echo "${program}.JCL not found"
+  fi
 
   # Run cobolcheck, but don't exit if it fails
   ./cobolcheck -p $program
