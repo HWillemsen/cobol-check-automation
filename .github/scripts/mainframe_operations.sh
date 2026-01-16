@@ -33,20 +33,20 @@ run_cobolcheck() {
   program=$1
   echo "Running cobolcheck for $program"
   
+  # Run cobolcheck, but don't exit if it fails
+  ./cobolcheck -p $program
+  echo "Cobolcheck execution completed for $program (exceptions may have occurred)"
+
   # Copy the CBL file if it exists
   if [ -f "./scr/main/cobol${program}.CBL" ]; then
     if cp "./src/main/cobol/${program}.CBL" "//'${ZOWE_USERNAME}.CBL($program)'"; then
       echo "Copied ${program}.CBL to ${ZOWE_USERNAME}.CBL($program)"
     else
-      echo "Failed to copy ${program}.JCL to ${ZOWE_USERNAME}.JCL($program)"
+      echo "Failed to copy ${program}.CBL to ${ZOWE_USERNAME}.CBL($program)"
     fi
   else
-    echo "${program}.JCL not found"
+    echo "${program}.CBL not found"
   fi
-
-  # Run cobolcheck, but don't exit if it fails
-  ./cobolcheck -p $program
-  echo "Cobolcheck execution completed for $program (exceptions may have occurred)"
 
   # Note: The "CC##99.CBL" file name below is NOT a placeholder
   # Keep it as is in the code
