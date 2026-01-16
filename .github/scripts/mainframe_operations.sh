@@ -39,7 +39,7 @@ run_cobolcheck() {
 
   # Paths and destination dataset/member
   src_cbl="./src/main/cobol/${program}.CBL"
-  dst_ds="//'[0m${ZOWE_USERNAME}.CBL(${program})'"
+  dst_ds="//'${ZOWE_USERNAME}.CBL(${program})'"
 
   # Copy the CBL file if it exists
   if [ -f "$src_cbl" ]; then
