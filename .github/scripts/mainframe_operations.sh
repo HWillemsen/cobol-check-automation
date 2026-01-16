@@ -34,18 +34,22 @@ run_cobolcheck() {
   echo "Running cobolcheck for $program"
   
   # Run cobolcheck, but don't exit if it fails
-  ./cobolcheck -p $program
+  ./cobolcheck -p "$program"
   echo "Cobolcheck execution completed for $program (exceptions may have occurred)"
 
+  # Paths and destination dataset/member
+  src_cbl="./src/main/cobol/${program}.CBL"
+  dst_ds="//'[0m${ZOWE_USERNAME}.CBL(${program})'"
+
   # Copy the CBL file if it exists
-  if [ -f "./scr/main/cobol${program}.CBL" ]; then
-    if cp "./src/main/cobol/${program}.CBL" "//'${ZOWE_USERNAME}.CBL($program)'"; then
-      echo "Copied ${program}.CBL to ${ZOWE_USERNAME}.CBL($program)"
+  if [ -f "$src_cbl" ]; then
+    if cp "$src_cbl" "$dst_ds"; then
+      echo "Copied ${program}.CBL to ${ZOWE_USERNAME}.CBL(${program})"
     else
-      echo "Failed to copy ${program}.CBL to ${ZOWE_USERNAME}.CBL($program)"
+      echo "Failed to copy ${program}.CBL to ${ZOWE_USERNAME}.CBL(${program})"
     fi
   else
-    echo "${program}.CBL not found"
+    echo "${src_cbl} not found"
   fi
 
   # Note: The "CC##99.CBL" file name below is NOT a placeholder
@@ -54,10 +58,10 @@ run_cobolcheck() {
   # Check if CC##99.CBL was created, regardless of cobolcheck exit status
   if [ -f "CC##99.CBL" ]; then
     # Copy to the MVS dataset
-    if cp CC##99.CBL "//'${ZOWE_USERNAME}.CBL($program)'"; then
-      echo "Copied CC##99.CBL to ${ZOWE_USERNAME}.CBL($program)"
+    if cp "CC##99.CBL" "$dst_ds"; then
+      echo "Copied CC##99.CBL to ${ZOWE_USERNAME}.CBL(${program})"
     else
-      echo "Failed to copy CC##99.CBL to ${ZOWE_USERNAME}.CBL($program)"
+      echo "Failed to copy CC##99.CBL to ${ZOWE_USERNAME}.CBL(${program})"
     fi
   else
     echo "CC##99.CBL not found for $program"
@@ -65,13 +69,14 @@ run_cobolcheck() {
 
   # Copy the JCL file if it exists
   if [ -f "${program}.JCL" ]; then
-    if cp ${program}.JCL "//'${ZOWE_USERNAME}.JCL($program)'"; then
-      echo "Copied ${program}.JCL to ${ZOWE_USERNAME}.JCL($program)"
+    dst_jcl="//'${ZOWE_USERNAME}.JCL(${program})'"
+    if cp "${program}.JCL" "$dst_jcl"; then
+      echo "Copied ${program}.JCL to ${ZOWE_USERNAME}.JCL(${program})"
       # Submit job to run testing version of the program
-      submit ${program}.JCL
+      submit "${program}.JCL"
       echo "Submitted job ${program}.JCL"
     else
-      echo "Failed to copy ${program}.JCL to ${ZOWE_USERNAME}.JCL($program)"
+      echo "Failed to copy ${program}.JCL to ${ZOWE_USERNAME}.JCL(${program})"
     fi
   else
     echo "${program}.JCL not found"
@@ -80,7 +85,7 @@ run_cobolcheck() {
 
 # Run for each program
 for program in NUMBERS EMPPAY DEPTPAY; do
-  run_cobolcheck $program
+  run_cobolcheck "$program"
 done
 
 echo "Mainframe operations completed"
