@@ -38,7 +38,7 @@ run_cobolcheck() {
   echo "Cobolcheck execution completed for $program (exceptions may have occurred)"
 
   # Paths and destination dataset/member
-  src_cbl="./testrun/CC##99.CBL"
+  src_cbl="./testruns/CC##99.CBL"
   dst_ds="//'${ZOWE_USERNAME}.CBL(${program})'"
 
   # Copy the CBL file if it exists
