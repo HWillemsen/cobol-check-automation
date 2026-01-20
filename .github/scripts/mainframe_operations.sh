@@ -44,28 +44,28 @@ run_cobolcheck() {
   # Copy the CBL file if it exists
   if [ -f "$src_cbl" ]; then
     if cp "$src_cbl" "$dst_ds"; then
-      echo "Copied ${program}.CBL to ${ZOWE_USERNAME}.CBL(${program})"
+      echo "Copied ${src_cbl} to $dst_ds"
     else
-      echo "Failed to copy ${program}.CBL to ${ZOWE_USERNAME}.CBL(${program})"
+      echo "Failed to copy ${src_cbl} to ${dst_ds}"
     fi
   else
-    echo "${src_cbl} not found"
+    echo "${src_cbl} not found for program $program"
   fi
 
   # Note: The "CC##99.CBL" file name below is NOT a placeholder
   # Keep it as is in the code
 
   # Check if CC##99.CBL was created, regardless of cobolcheck exit status
-  if [ -f "CC##99.CBL" ]; then
+  # if [ -f "CC##99.CBL" ]; then
     # Copy to the MVS dataset
-    if cp "CC##99.CBL" "$dst_ds"; then
-      echo "Copied CC##99.CBL to ${ZOWE_USERNAME}.CBL(${program})"
-    else
-      echo "Failed to copy CC##99.CBL to ${ZOWE_USERNAME}.CBL(${program})"
-    fi
-  else
-    echo "CC##99.CBL not found for $program"
-  fi
+    # if cp "CC##99.CBL" "$dst_ds"; then
+      # echo "Copied CC##99.CBL to ${ZOWE_USERNAME}.CBL(${program})"
+    # else
+      # echo "Failed to copy CC##99.CBL to ${ZOWE_USERNAME}.CBL(${program})"
+    # fi
+  # else
+    # echo "CC##99.CBL not found for $program"
+  # fi
 
   # Copy the JCL file if it exists
   if [ -f "${program}.JCL" ]; then
